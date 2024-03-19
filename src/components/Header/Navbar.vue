@@ -12,7 +12,7 @@ export default {
       <img src="https://vuejs.org/images/logo.png" alt="navbar-logo" />
       <h1>Fake Store</h1>
     </div>
-    <Cart />
+    
   </header>
 </template>
 

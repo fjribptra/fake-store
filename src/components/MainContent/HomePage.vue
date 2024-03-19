@@ -1,15 +1,20 @@
 <script>
 import Card from "../Utilites/Card.vue";
+import Cart from "../Utilites/Cart.vue";
+import Checkout from "../Utilites/Checkout.vue";
 
 export default {
   data() {
     return {
       products: [],
       maximum: 999999999,
+      cart: [],
     };
   },
   components: {
     Card,
+    Cart,
+    Checkout,
   },
   mounted() {
     fetch("https://fakestoreapi.com/products")
@@ -18,6 +23,31 @@ export default {
         this.products = data;
         console.log(this.products);
       });
+  },
+  methods: {
+    addToCart(item) {
+      let existingItem = this.cart.find((cartItem) => cartItem.title === item.title);
+      if (existingItem) {
+        existingItem.qty++;
+        existingItem.price *= existingItem.qty;
+        return;
+      }
+      this.cart.push({ title: item.title, price: parseFloat(item.price).toFixed(3), qty: 1 });
+
+      console.log(this.cart);
+    },
+
+    removeToCart(item) {
+      let existingItem = this.cart.find((cartItem) => cartItem.title === item.title);
+      if (existingItem) {
+        existingItem.qty--;
+        existingItem.price *= existingItem.qty;
+        if (existingItem.qty === 0) {
+          this.cart = this.cart.filter((cartItem) => cartItem.title !== item.title);
+        }
+        return;
+      }
+    },
   },
 };
 </script>
@@ -28,9 +58,11 @@ export default {
     <div class="filter-price-wrapper">
       <label>Filter by price:</label>
       <input type="number" v-model="maximum" />
+      <Cart :cart="cart" />
     </div>
+    <Checkout :cart="cart" @add-to-cart="addToCart" @remove-to-cart="removeToCart" />
     <div class="card-container">
-      <Card :products="products" :maximum="maximum" />
+      <Card :products="products" :maximum="maximum" @add-to-cart="addToCart" />
     </div>
   </main>
 </template>

@@ -27,7 +27,7 @@ export default {
       <p>{{ item.description }}</p>
     </div>
     <div class="button-wrapper">
-      <button>Add to cart</button>
+      <button @click="$emit('add-to-cart', item)">Add to cart</button>
       <strong>Rp {{ parseFloat(item.price).toFixed(3) }}</strong>
     </div>
   </div>
