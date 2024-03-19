@@ -2,8 +2,22 @@
 import Card from "../Utilites/Card.vue";
 
 export default {
+  data() {
+    return {
+      products: [],
+      maximum: 999999999,
+    };
+  },
   components: {
     Card,
+  },
+  mounted() {
+    fetch("https://fakestoreapi.com/products")
+      .then((res) => res.json())
+      .then((data) => {
+        this.products = data;
+        console.log(this.products);
+      });
   },
 };
 </script>
@@ -11,8 +25,12 @@ export default {
 <template>
   <main>
     <h1>Our Produtcs</h1>
+    <div class="filter-price-wrapper">
+      <label>Filter by price:</label>
+      <input type="number" v-model="maximum" />
+    </div>
     <div class="card-container">
-      <Card />
+      <Card :products="products" :maximum="maximum" />
     </div>
   </main>
 </template>
@@ -26,6 +44,11 @@ main {
 
 h1 {
   font-weight: bold;
+}
+
+.filter-price-wrapper {
+  display: flex;
+  gap: 10px;
 }
 
 .card-container {

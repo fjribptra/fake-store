@@ -1,23 +1,26 @@
 <script>
 export default {
-  data() {
-    return {
-      products: [],
-    };
+  props: {
+    products: {
+      type: Array,
+      deafult: [],
+    },
+    maximum: {
+      type: Number,
+      default: 0,
+    },
   },
-  mounted() {
-    fetch("https://fakestoreapi.com/products")
-      .then((res) => res.json())
-      .then((data) => {
-        this.products = data;
-        console.log(this.products);
-      });
+  computed: {
+    showItems() {
+      let max = this.maximum;
+      return this.products.filter((product) => product.price <= max);
+    },
   },
 };
 </script>
 
 <template>
-  <div class="card-wrapper" v-for="item in products" :key="item.id">
+  <div class="card-wrapper" v-for="item in showItems" :key="item.id">
     <div>
       <img :src="item.image" alt="..." />
       <h2>{{ item.title }}</h2>
